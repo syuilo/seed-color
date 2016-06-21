@@ -47,6 +47,8 @@ const _ = (seed: string) => {
 	return new Color(r, g, b);
 };
 
+Object.defineProperty(_, "default", { value: _ });
+
 module.exports = _;
 
 export default _;
