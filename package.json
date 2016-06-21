@@ -1,0 +1,26 @@
+{
+  "name": "seed-color",
+  "version": "0.1.0",
+  "description": "Generate random colors from an seed",
+  "keywords": [
+    "color"
+  ],
+  "author": "syuilo",
+  "license": "MIT",
+  "repository": "https://github.com/syuilo/seed-color.git",
+  "bugs": "https://github.com/syuilo/seed-color/issues",
+  "main": "./built/index.js",
+  "devDependencies": {
+    "dtsm": "1.1.0",
+    "gulp": "3.9.1",
+    "gulp-tslint": "5.0.0",
+    "gulp-typescript": "2.13.6",
+    "merge2": "1.0.2",
+    "tslint": "3.11.0",
+    "typescript": "1.8.10"
+  },
+  "dependencies": {
+    "seedrandom": "2.4.2"
+  },
+  "private": false
+}
