@@ -5,6 +5,7 @@ seed-color
 [![][mit-badge]][mit]
 
 Generate random color from a seed.
+For example, such as when you want to generate a unique color from the values, such as IP address and ID.
 
 ## Install
 ``` shell
