@@ -17,6 +17,12 @@ seedColor('hima').toHex(); // #d72c5d
 seedColor('saku').toHex(); // #ae6e6c
 ```
 
+### On TypeScript
+Type definition are bundled.
+``` typescript
+import seedColor from 'seed-color';
+```
+
 ## License
 [MIT](LICENSE)
 
