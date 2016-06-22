@@ -4,6 +4,8 @@ seed-color
 [![][npm-badge]][npm-link]
 [![][mit-badge]][mit]
 
+Generate random color from a seed.
+
 ## Install
 ``` shell
 $ npm install seed-color --save
