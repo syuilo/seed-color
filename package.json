@@ -1,6 +1,6 @@
 {
   "name": "seed-color",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Generate random colors from a seed",
   "keywords": [
     "color"
