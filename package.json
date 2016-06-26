@@ -4,6 +4,7 @@
   "description": "Generate random colors from a seed",
   "keywords": [
     "color",
+    "generator",
     "random",
     "hash",
     "seed"
