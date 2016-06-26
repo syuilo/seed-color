@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Generate random colors from a seed",
   "keywords": [
-    "color"
+    "color",
+    "random",
+    "hash",
+    "seed"
   ],
   "author": "syuilo",
   "license": "MIT",
