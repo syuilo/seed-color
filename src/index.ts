@@ -1,5 +1,23 @@
 import * as seedrandom from 'seedrandom';
 
+export type RGB = {
+	r: number;
+	g: number;
+	b: number;
+};
+
+export type HSV = {
+	h: number;
+	s: number;
+	v: number;
+};
+
+export type HSL = {
+	h: number;
+	s: number;
+	l: number;
+};
+
 export class Color {
 	public r: number;
 	public g: number;
@@ -9,6 +27,89 @@ export class Color {
 		this.r = r;
 		this.g = g;
 		this.b = b;
+	}
+
+	public toRGB(): RGB {
+		return {
+			r: this.r,
+			g: this.g,
+			b: this.b
+		};
+	}
+
+	public toHSV(): HSV {
+		const max = Math.max(this.r, this.g, this.b);
+		const min = Math.min(this.r, this.g, this.b);
+		const v = max;
+		const d = max - min;
+		let h: number;
+		let s: number;
+
+		if (max === 0) {
+			s = 0;
+		} else {
+			s = d / max;
+		}
+
+		if (max === min) {
+			h = 0;
+		} else {
+			switch (max) {
+				case this.r:
+					h = (this.g - this.b) / d + (this.g < this.b ? 6 : 0);
+					break;
+				case this.g:
+					h = (this.b - this.r) / d + 2;
+					break;
+				case this.b:
+					h = (this.r - this.g) / d + 4;
+					break;
+			}
+
+			h /= 6;
+		}
+
+		return {
+			h,
+			s,
+			v
+		};
+	}
+
+	public toHSL(): HSL {
+		const max = Math.max(this.r, this.g, this.b);
+		const min = Math.min(this.r, this.g, this.b);
+		const l = (max + min) / 2;
+		const d = max - min;
+		let h: number;
+		let s: number;
+
+		if (max === min) {
+			h = 0;
+			s = 0;
+		} else {
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+			switch (max) {
+				case this.r:
+					h = (this.g - this.b) / d + (this.g < this.b ? 6 : 0);
+					break;
+				case this.g:
+					h = (this.b - this.r) / d + 2;
+					break;
+				case this.b:
+					h = (this.r - this.g) / d + 4;
+					break;
+			}
+
+			h /= 6;
+		}
+
+		return {
+			h,
+			s,
+			l
+		};
 	}
 
 	public toHex(withNumberSign: boolean = true): string {
