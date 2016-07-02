@@ -29,6 +29,39 @@ export class Color {
 	public get rgb() {
 		return [this.r, this.g, this.b];
 	}
+	public set rgb(rgb: number[]) {
+		this.r = rgb[0];
+		this.g = rgb[1];
+		this.b = rgb[2];
+	}
+
+	/**
+	 * Hex to RGB
+	 */
+	public static parseHex(hex: string): RGB {
+		if (hex[0] === '#') {
+			hex = hex.substr(1);
+		}
+
+		switch (hex.length) {
+			case 6: // #rrggbb
+				return {
+					r: parseInt(hex.substr(0, 2), 16),
+					g: parseInt(hex.substr(2, 2), 16),
+					b: parseInt(hex.substr(4, 2), 16)
+				};
+
+			case 3: // #rgb
+				return {
+					r: parseInt((<any>hex.substr(0, 1)).repeat(2), 16),
+					g: parseInt((<any>hex.substr(1, 1)).repeat(2), 16),
+					b: parseInt((<any>hex.substr(2, 1)).repeat(2), 16)
+				};
+
+			default:
+				throw 'Invalid color code';
+		}
+	}
 
 	constructor(rgb: RGB);
 	constructor(hsv: HSV);
@@ -42,60 +75,57 @@ export class Color {
 			this.r = x;
 			this.g = y;
 			this.b = z;
-			return;
 		}
 
 		// Color name or Color code
-		if (typeof x === 'string') {
+		else if (typeof x === 'string') {
 			if (x[0] === '#') {
-				x = x.substr(1);
-
-				switch (x.length) {
-					case 6: // #rrggbb
-						this.r = parseInt(x.substr(0, 2), 16);
-						this.g = parseInt(x.substr(2, 2), 16);
-						this.b = parseInt(x.substr(4, 2), 16);
-						break;
-
-					case 3: // #rgb
-						this.r = parseInt(x.substr(0, 1).repeat(2), 16);
-						this.g = parseInt(x.substr(1, 1).repeat(2), 16);
-						this.b = parseInt(x.substr(2, 1).repeat(2), 16);
-						break;
-
-					default:
-						throw 'Invalid color code';
-				}
+				this.setRGB(Color.parseHex(x));
 			} else {
-				// from color name [TODO]
+				if (colorNames.hasOwnProperty(x)) {
+					this.setRGB(Color.parseHex(colorNames[x]));
+				}
 			}
 		}
 
 		// RGB, HSV or HSL object
-		if (typeof x === 'object') {
+		else if (typeof x === 'object') {
 			if (x.r && x.g && x.b) {
-				this.r = x.r;
-				this.g = x.g;
-				this.b = x.b;
+				this.setRGB(x);
 			} else if (x.h && x.s && x.v) {
-
+				this.setHSV(x);
 			} else if (x.h && x.s && x.l) {
-
+				this.setHSL(x);
 			} else {
 				throw 'Invalid color space';
 			}
 		}
 
 		// Other
-		throw 'Invalid color arugument';
+		else {
+			throw 'Invalid color arugument';
+		}
 	}
 
-	public toRGB(): RGB {
+	/**
+	 * Get an RGB object that represent this color
+	 */
+	public toRGB() {
 		return {
 			r: this.r,
 			g: this.g,
 			b: this.b
 		};
+	}
+
+	/**
+	 * Set the color using the RGB
+	 */
+	public setRGB(rgb: RGB) {
+		this.r = rgb.r;
+		this.g = rgb.g;
+		this.b = rgb.b;
+		return this;
 	}
 
 	/**
@@ -132,37 +162,23 @@ export class Color {
 	}
 
 	/**
-	 * Get HSL object
+	 * Set the color using the HSV
 	 */
-	public toHSL(): HSL {
-		const max = Math.max(this.r, this.g, this.b);
-		const min = Math.min(this.r, this.g, this.b);
-		const d = max - min;
-
-		let h: number;
-		const l = (max + min) / 2;
-		let s: number;
-
-		if (max === min) {
-			h = 0;
-			s = 0;
-		} else {
-			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-			switch (max) {
-				case this.r: h = (this.g - this.b) / d + (this.g < this.b ? 6 : 0); break;
-				case this.g: h = (this.b - this.r) / d + 2; break;
-				case this.b: h = (this.r - this.g) / d + 4; break;
-			}
-
-			h /= 6;
-		}
-
-		return { h, s, l };
-	}
-
-	public setHSV(h: number, s: number, v: number) {
+	public setHSV(hsv: HSV);
+	public setHSV(h: number, s: number, v: number);
+	public setHSV(x: any, y: number, z: number) {
 		let r: number, g: number, b: number;
+
+		let h: number, s: number, v: number;
+		if (typeof x === 'object') {
+			h = x.h;
+			s = x.s;
+			v = x.v;
+		} else {
+			h = x;
+			s = y;
+			v = z;
+		}
 
 		while (h < 0) {
 			h += 360;
@@ -196,8 +212,54 @@ export class Color {
 		return {'r': Math.round(r), 'g': Math.round(g), 'b': Math.round(b)};
 	}
 
-	public setHSL(h: number, s: number, l: number) {
+	/**
+	 * Get HSL object
+	 */
+	public toHSL(): HSL {
+		const max = Math.max(this.r, this.g, this.b);
+		const min = Math.min(this.r, this.g, this.b);
+		const d = max - min;
+
+		let h: number;
+		const l = (max + min) / 2;
+		let s: number;
+
+		if (max === min) {
+			h = 0;
+			s = 0;
+		} else {
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+			switch (max) {
+				case this.r: h = (this.g - this.b) / d + (this.g < this.b ? 6 : 0); break;
+				case this.g: h = (this.b - this.r) / d + 2; break;
+				case this.b: h = (this.r - this.g) / d + 4; break;
+			}
+
+			h /= 6;
+		}
+
+		return { h, s, l };
+	}
+
+	/**
+	 * Set the color using the HSL
+	 */
+	public setHSL(hsl: HSL);
+	public setHSL(h: number, s: number, l: number);
+	public setHSL(x: any, y: number, z: number) {
 		let r: number, g: number, b: number;
+
+		let h: number, s: number, l: number;
+		if (typeof x === 'object') {
+			h = x.h;
+			s = x.s;
+			l = x.l;
+		} else {
+			h = x;
+			s = y;
+			l = z;
+		}
 
 		if (s == 0) {
 			r = g = b = l; // achromatic
@@ -400,7 +462,7 @@ export const colorNames = {
 	Cyan:                 '#00FFFF',
 	DarkBlue:             '#00008B',
 	DarkCyan:             '#008B8B',
-	DarkGoldenRod:        '#B8860B',
+	DarkGoldenrod:        '#B8860B',
 	DarkGray:             '#A9A9A9',
 	DarkGreen:            '#006400',
 	DarkKhaki:            '#BDB76B',
@@ -445,4 +507,15 @@ export const colorNames = {
 	LightCyan:            '#E0FFFF',
 	LightGoldenRodYellow: '#FAFAD2',
 	LightGray:            '#D3D3D3',
+	LightPink:            '#FFB6C1',
+	LightSalmon:          '#FFA07A',
+	LightSeaGreen:        '#20B2AA',
+	LightSkyBlue:         '#87CEFA',
+	LightSlateGray:       '#778899',
+	LightSteelBlue:       '#B0C4DE',
+	LightYellow:          '#FFFFE0',
+	Lime:                 '#00FF00',
+	LimeGreen:            '#32CD32',
+	Linen:                '#FAF0E6',
+	Magenta:              '#FF00FF',
 };
