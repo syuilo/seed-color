@@ -132,8 +132,12 @@ export class Color {
 	 * Get HSV object
 	 */
 	public toHSV(): HSV {
-		const max = Math.max(this.r, this.g, this.b);
-		const min = Math.min(this.r, this.g, this.b);
+		const r = this.r;
+		const g = this.g;
+		const b = this.b;
+
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
 		const d = max - min;
 
 		let h: number;
@@ -150,9 +154,9 @@ export class Color {
 			h = 0;
 		} else {
 			switch (max) {
-				case this.r: h = (this.g - this.b) / d + (this.g < this.b ? 6 : 0); break;
-				case this.g: h = (this.b - this.r) / d + 2; break;
-				case this.b: h = (this.r - this.g) / d + 4; break;
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2;               break;
+				case b: h = (r - g) / d + 4;               break;
 			}
 
 			h /= 6;
@@ -201,12 +205,12 @@ export class Color {
 			t = v * (1 - (1 - f) * s)
 
 		switch (i) {
-			case 0: r = v;  g = t;  b = p;  break;
-			case 1: r = q;  g = v;  b = p;  break;
-			case 2: r = p;  g = v;  b = t;  break;
-			case 3: r = p;  g = q;  b = v;  break;
-			case 4: r = t;  g = p;  b = v;  break;
-			case 5: r = v;  g = p;  b = q;  break;
+			case 0: r = v; g = t; b = p; break;
+			case 1: r = q; g = v; b = p; break;
+			case 2: r = p; g = v; b = t; break;
+			case 3: r = p; g = q; b = v; break;
+			case 4: r = t; g = p; b = v; break;
+			case 5: r = v; g = p; b = q; break;
 		}
 
 		return {'r': Math.round(r), 'g': Math.round(g), 'b': Math.round(b)};
@@ -216,8 +220,12 @@ export class Color {
 	 * Get HSL object
 	 */
 	public toHSL(): HSL {
-		const max = Math.max(this.r, this.g, this.b);
-		const min = Math.min(this.r, this.g, this.b);
+		const r = this.r;
+		const g = this.g;
+		const b = this.b;
+
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
 		const d = max - min;
 
 		let h: number;
@@ -231,9 +239,9 @@ export class Color {
 			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
 			switch (max) {
-				case this.r: h = (this.g - this.b) / d + (this.g < this.b ? 6 : 0); break;
-				case this.g: h = (this.b - this.r) / d + 2; break;
-				case this.b: h = (this.r - this.g) / d + 4; break;
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2;               break;
+				case b: h = (r - g) / d + 4;               break;
 			}
 
 			h /= 6;
