@@ -15,17 +15,17 @@
   "bugs": "https://github.com/syuilo/seed-color/issues",
   "main": "./built/index.js",
   "typings": "./built/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --harmony"
+  },
   "devDependencies": {
-    "dtsm": "1.1.0",
-    "gulp": "3.9.1",
-    "gulp-tslint": "5.0.0",
-    "gulp-typescript": "2.13.6",
-    "merge2": "1.0.2",
-    "tslint": "3.11.0",
-    "typescript": "1.8.10"
+    "@types/mocha": "2.2.41",
+    "@types/node": "7.0.31",
+    "mocha": "3.4.2",
+    "typescript": "2.3.4"
   },
   "dependencies": {
     "seedrandom": "2.4.2"
-  },
-  "private": false
+  }
 }

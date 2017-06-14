@@ -1,7 +1,7 @@
 /**
  * Color
  */
-export class Color {
+export default class Color {
 
 	/**
 	 * Red
@@ -53,9 +53,9 @@ export class Color {
 
 			case 3: // #rgb
 				return {
-					r: parseInt((<any>hex.substr(0, 1)).repeat(2), 16),
-					g: parseInt((<any>hex.substr(1, 1)).repeat(2), 16),
-					b: parseInt((<any>hex.substr(2, 1)).repeat(2), 16)
+					r: parseInt(hex.substr(0, 1).repeat(2), 16),
+					g: parseInt(hex.substr(1, 1).repeat(2), 16),
+					b: parseInt(hex.substr(2, 1).repeat(2), 16)
 				};
 
 			default:
@@ -70,24 +70,19 @@ export class Color {
 		if (x[0] === '#') {
 			return Color.parseHex(x);
 		} else {
-			if (Color.names.hasOwnProperty(x)) {
-				return Color.parseHex(Color.names[x]);
-			} else {
-				return null;
-			}
+			return null;
 		}
 	}
 
 	/**
 	 * Convert RGB to HSV
 	 */
-	public static rgbToHsv(color: string): HSV;
-	public static rgbToHsv(color: Color): HSV;
-	public static rgbToHsv(rgb: RGB): HSV;
-	public static rgbToHsv(rgb: number[]): HSV;
+	public static rgbToHsv(color: string | Color | RGB | number[]): HSV;
 	public static rgbToHsv(r: number, g: number, b: number): HSV;
-	public static rgbToHsv(x: any, y: any, z: any): HSV {
-		let r: number, g: number, b: number;
+	public static rgbToHsv(x: any, y?: any, z?: any): HSV {
+		let r: number;
+		let g: number;
+		let b: number;
 
 		if (x && y && z) {
 			r = x;
@@ -146,13 +141,12 @@ export class Color {
 	/**
 	 * Convert RGB to HSL
 	 */
-	public static rgbToHsl(color: string): HSL;
-	public static rgbToHsl(color: Color): HSL;
-	public static rgbToHsl(rgb: RGB): HSL;
-	public static rgbToHsl(rgb: number[]): HSL;
+	public static rgbToHsl(color: string | Color | RGB | number[]): HSL;
 	public static rgbToHsl(r: number, g: number, b: number): HSL;
-	public static rgbToHsl(x: any, y: any, z: any): HSL {
-		let r: number, g: number, b: number;
+	public static rgbToHsl(x: any, y?: any, z?: any): HSL {
+		let r: number;
+		let g: number;
+		let b: number;
 
 		if (x && y && z) {
 			r = x;
@@ -210,10 +204,15 @@ export class Color {
 	 */
 	public static hsvToRgb(hsv: HSV): RGB;
 	public static hsvToRgb(h: number, s: number, v: number): RGB;
-	public static hsvToRgb(x: any, y: number, z: number): RGB {
-		let r: number, g: number, b: number;
+	public static hsvToRgb(x: any, y?: number, z?: number): RGB {
+		let r: number;
+		let g: number;
+		let b: number;
 
-		let h: number, s: number, v: number;
+		let h: number;
+		let s: number;
+		let v: number;
+
 		if (typeof x === 'object') {
 			h = x.h;
 			s = x.s;
@@ -232,17 +231,16 @@ export class Color {
 
 		if (s === 0) {
 			v = Math.round(v);
-			return {'r': v, 'g': v, 'b': v};
+			return { r: v, g: v, b: v };
 		}
 
 		s = s / 255;
 
-		const
-			i = Math.floor(h / 60) % 6,
-			f = (h / 60) - i,
-			p = v * (1 - s),
-			q = v * (1 - f * s),
-			t = v * (1 - (1 - f) * s);
+		const i = Math.floor(h / 60) % 6;
+		const f = (h / 60) - i;
+		const p = v * (1 - s);
+		const q = v * (1 - f * s);
+		const t = v * (1 - (1 - f) * s);
 
 		switch (i) {
 			case 0: r = v; g = t; b = p; break;
@@ -265,10 +263,15 @@ export class Color {
 	 */
 	public static hslToRgb(hsl: HSL): RGB;
 	public static hslToRgb(h: number, s: number, l: number): RGB;
-	public static hslToRgb(x: any, y: number, z: number): RGB {
-		let r: number, g: number, b: number;
+	public static hslToRgb(x: any, y?: number, z?: number): RGB {
+		let r: number;
+		let g: number;
+		let b: number;
 
-		let h: number, s: number, l: number;
+		let h: number;
+		let s: number;
+		let l: number;
+
 		if (typeof x === 'object') {
 			h = x.h;
 			s = x.s;
@@ -285,14 +288,15 @@ export class Color {
 			const hueToRgb = (p: number, q: number, t: number) => {
 				if (t < 0) t += 1;
 				if (t > 1) t -= 1;
-				if (t < 1/6) return p + (q - p) * 6 * t;
-				if (t < 1/2) return q;
-				if (t < 2/3) return p + (q - p) * (2 / 3 - t) * 6;
+				if (t < 1 / 6) return p + (q - p) * 6 * t;
+				if (t < 1 / 2) return q;
+				if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
 				return p;
-			}
+			};
 
 			const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
 			const p = 2 * l - q;
+
 			r = hueToRgb(p, q, h + 1 / 3);
 			g = hueToRgb(p, q, h);
 			b = hueToRgb(p, q, h - 1 / 3);
@@ -305,32 +309,26 @@ export class Color {
 		};
 	}
 
-	constructor(rgb: RGB);
-	constructor(hsv: HSV);
-	constructor(hsl: HSL);
-	constructor(color: string);
-	constructor(color: Color);
+	constructor(color: string | Color | RGB | HSV | HSL);
 	constructor(r: number, g: number, b: number);
-	constructor(x: any, y: number, z: number) {
+	constructor(x: any, y?: number, z?: number) {
 		// r, g, b
 		if (x && y && z) {
 			this.r = x;
 			this.g = y;
 			this.b = z;
-		}
 
 		// Color name or Color code
-		else if (typeof x === 'string') {
+		} else if (typeof x === 'string') {
 			const rgb = Color.parseString(x);
 			if (rgb !== null) {
 				this.setRGB(rgb);
 			} else {
 				throw 'unknown color string';
 			}
-		}
 
 		// RGB, HSV or HSL object
-		else if (typeof x === 'object') {
+		} else if (typeof x === 'object') {
 			if (x.r && x.g && x.b) {
 				this.setRGB(x);
 			} else if (x.h && x.s && x.v) {
@@ -340,11 +338,10 @@ export class Color {
 			} else {
 				throw 'Invalid color space';
 			}
-		}
 
 		// Other
-		else {
-			throw 'Invalid color arugument';
+		} else {
+			throw 'Invalid arugument';
 		}
 	}
 
@@ -381,7 +378,7 @@ export class Color {
 	 */
 	public setHSV(hsv: HSV): void;
 	public setHSV(h: number, s: number, v: number): void;
-	public setHSV(x: any, y: number, z: number): void {
+	public setHSV(x: any, y?: number, z?: number): void {
 		this.setRGB(Color.hsvToRgb(x, y, z));
 	}
 
@@ -397,7 +394,7 @@ export class Color {
 	 */
 	public setHSL(hsl: HSL): void;
 	public setHSL(h: number, s: number, l: number): void;
-	public setHSL(x: any, y: number, z: number): void {
+	public setHSL(x: any, y?: number, z?: number): void {
 		this.setRGB(Color.hslToRgb(x, y, z));
 	}
 
@@ -416,42 +413,6 @@ export class Color {
 		return withNumberSign
 			? `#${rHex2}${gHex2}${bHex2}`
 			: rHex2 + gHex2 + bHex2;
-	}
-
-	/**
-	 * Get CSS value string
-	 */
-	public toCSS(compress = false): string {
-		// `value` is set if this color was originally
-		// converted from a named color string so we need
-		// to respect this and try to output named color too.
-		if (this.value) {
-			return this.value;
-		}
-
-		// If we have some transparency, the only way to represent it
-		// is via `rgba`. Otherwise, we use the hex representation,
-		// which has better compatibility with older browsers.
-		// Values are capped between `0` and `255`, rounded and zero-padded.
-		if (this.a < 1) {
-			return "rgba(" + this.rgb.map(c =>
-				clamp(Math.round(c), 255)
-			).concat(clamp(this.a, 1))
-				.join(',' + (compress ? '' : ' ')) + ")";
-		}
-
-		color = this.toRGB();
-
-		if (compress) {
-				var splitcolor = color.split('');
-
-				// Convert color to short format
-				if (splitcolor[1] === splitcolor[2] && splitcolor[3] === splitcolor[4] && splitcolor[5] === splitcolor[6]) {
-						color = '#' + splitcolor[1] + splitcolor[3] + splitcolor[5];
-				}
-		}
-
-		return color;
 	}
 
 	/**
@@ -487,101 +448,6 @@ export class Color {
 	public clone(): Color {
 		return new Color(this);
 	}
-
-	/**
-	 * X11 color names
-	 */
-	public static names = {
-		AliceBlue:            '#F0F8FF',
-		AntiqueWhite:         '#FAEBD7',
-		Aqua:                 '#00FFFF',
-		Aquamarine:           '#7FFFD4',
-		Azure:                '#F0FFFF',
-		Beige:                '#F5F5DC',
-		Bisque:               '#FFE4C4',
-		Black:                '#000000',
-		BlanchedAlmond:       '#FFEBCD',
-		Blue:                 '#0000FF',
-		BlueViolet:           '#8A2BE2',
-		Brown:                '#A52A2A',
-		BurlyWood:            '#DEB887',
-		CadetBlue:            '#5F9EA0',
-		Chartreuse:           '#7FFF00',
-		Chocolate:            '#D2691E',
-		Coral:                '#FF7F50',
-		CornflowerBlue:       '#6495ED',
-		Cornsilk:             '#FFF8DC',
-		Crimson:              '#DC143C',
-		Cyan:                 '#00FFFF',
-		DarkBlue:             '#00008B',
-		DarkCyan:             '#008B8B',
-		DarkGoldenrod:        '#B8860B',
-		DarkGray:             '#A9A9A9',
-		DarkGreen:            '#006400',
-		DarkKhaki:            '#BDB76B',
-		DarkMagenta:          '#8B008B',
-		DarkOliveGreen:       '#556B2F',
-		DarkOrange:           '#FF8C00',
-		DarkOrchid:           '#9932CC',
-		DarkRed:              '#8B0000',
-		DarkSalmon:           '#E9967A',
-		DarkSeaGreen:         '#8FBC8F',
-		DarkSlateBlue:        '#483D8B',
-		DarkSlateGray:        '#2F4F4F',
-		DarkTurquoise:        '#00CED1',
-		DarkViolet:           '#9400D3',
-		DeepPink:             '#FF1493',
-		DeepSkyBlue:          '#00BFFF',
-		DimGray:              '#696969',
-		DodgerBlue:           '#1E90FF',
-		FireBrick:            '#B22222',
-		FloralWhite:          '#FFFAF0',
-		ForestGreen:          '#228B22',
-		Fuchsia:              '#FF00FF',
-		Gainsboro:            '#DCDCDC',
-		GhostWhite:           '#F8F8FF',
-		Gold:                 '#FFD700',
-		GoldenRod:            '#DAA520',
-		Gray:                 '#808080',
-		Green:                '#008000',
-		GreenYellow:          '#ADFF2F',
-		HoneyDew:             '#F0FFF0',
-		HotPink:              '#FF69B4',
-		IndianRed:            '#CD5C5C',
-		Indigo:               '#4B0082',
-		Ivory:                '#FFFFF0',
-		Khaki:                '#F0E68C',
-		Lavender:             '#E6E6FA',
-		LavenderBlush:        '#FFF0F5',
-		LawnGreen:            '#7CFC00',
-		LemonChiffon:         '#FFFACD',
-		LightBlue:            '#ADD8E6',
-		LightCoral:           '#F08080',
-		LightCyan:            '#E0FFFF',
-		LightGoldenRodYellow: '#FAFAD2',
-		LightGray:            '#D3D3D3',
-		LightPink:            '#FFB6C1',
-		LightSalmon:          '#FFA07A',
-		LightSeaGreen:        '#20B2AA',
-		LightSkyBlue:         '#87CEFA',
-		LightSlateGray:       '#778899',
-		LightSteelBlue:       '#B0C4DE',
-		LightYellow:          '#FFFFE0',
-		Lime:                 '#00FF00',
-		LimeGreen:            '#32CD32',
-		Linen:                '#FAF0E6',
-		Magenta:              '#FF00FF',
-		Maroon:               '#800000',
-		MediumAquamarine:     '#66CDAA',
-		MediumBlue:           '#0000CD',
-		MediumOrchid:         '#BA55D3',
-		MediumPurple:         '#9370DB',
-		MediumSeaGreen:       '#3CB371',
-		MediumSlateBlue:      '#7B68EE',
-		MediumSpringGreen:    '#00FA9A',
-		MediumTurquoise:      '#48D1CC',
-		MediumVioletRed:      '#C71585',
-	};
 }
 
 function clamp(v: number, max: number): number {

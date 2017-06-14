@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"noEmitOnError": false,
-		"noImplicitAny": true,
+		"noEmitOnError": true,
+		"noImplicitAny": false,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"declaration": true,
@@ -14,18 +14,8 @@
 		"rootDir": "src"
 	},
 	"compileOnSave": false,
-	"atom": {
-		"rewriteTsconfig": true
-	},
-	"filesGlob": [
+	"include": [
 		"./node_modules/typescript/lib/lib.es6.d.ts",
-		"./typings/bundle.d.ts",
 		"./src/**/*.ts"
-	],
-	"files": [
-		"./node_modules/typescript/lib/lib.es6.d.ts",
-		"./typings/bundle.d.ts",
-		"./src/color.ts",
-		"./src/index.ts"
 	]
 }

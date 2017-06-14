@@ -1,5 +1,5 @@
 import * as seedrandom from 'seedrandom';
-import {Color} from './color';
+import Color from './color';
 
 const _ = (seed: string) => {
 	// Init randomizer
