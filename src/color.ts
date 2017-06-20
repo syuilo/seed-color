@@ -313,7 +313,7 @@ export default class Color {
 	constructor(r: number, g: number, b: number);
 	constructor(x: any, y?: number, z?: number) {
 		// r, g, b
-		if (x && y && z) {
+		if (x != null && y != null && z != null) {
 			this.r = x;
 			this.g = y;
 			this.b = z;
@@ -329,11 +329,11 @@ export default class Color {
 
 		// RGB, HSV or HSL object
 		} else if (typeof x === 'object') {
-			if (x.r && x.g && x.b) {
+			if (x.r != null && x.g != null && x.b != null) {
 				this.setRGB(x);
-			} else if (x.h && x.s && x.v) {
+			} else if (x.h != null && x.s != null && x.v != null) {
 				this.setHSV(x);
-			} else if (x.h && x.s && x.l) {
+			} else if (x.h != null && x.s != null && x.l != null) {
 				this.setHSL(x);
 			} else {
 				throw 'Invalid color space';
