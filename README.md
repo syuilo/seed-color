@@ -1,6 +1,8 @@
 seed-color
 -------------------------------
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/syuilo/seed-color.svg)](https://greenkeeper.io/)
+
 [![][npm-badge]][npm-link]
 [![][mit-badge]][mit]
 
